@@ -182,7 +182,7 @@ App({
   globalData:{
     userInfo:null,
     subDomain: "393b7463cbb5c1fd4c9f5f2da4d96fa0", // 如果你的域名是： https://api.it120.cc/abcd 那么这里只要填写 abcd
-    version: "1.9.SNAPSHOT",
+    version: "v0.0.1",
     shareProfile: '点点橙——共享早教新玩法' // 首页转发的时候话术
   }
   /*
