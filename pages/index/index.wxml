@@ -1,6 +1,7 @@
 <!--index.wxml-->
 <!--1px = 750/320 = 2.34rpx;-->
 <view class="container">
+   <!--
    <view class="swiper-container">
         <swiper class="swiper_box" 
                     autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" bindchange="swiperchange">
@@ -16,6 +17,7 @@
             </block>  
         </view>  
    </view>
+   -->
    <!--
     <view class="type-container">
         <scroll-view class="type-navbar" scroll-x="true">
