@@ -143,6 +143,10 @@ Page({
     })
   },
   getCoupons: function () {
+    this.setData({
+      hasNoCoupons: true,
+    });
+    return;
     var that = this;
     wx.request({
       url: 'https://api.it120.cc/' + app.globalData.subDomain + '/discounts/coupons',
@@ -229,6 +233,10 @@ Page({
     }
   },
   getNotice: function () {
+    this.setData({
+      noticeList: null
+    });
+    return;
     var that = this;
     wx.request({
       url: 'https://api.it120.cc/' + app.globalData.subDomain + '/notice/list',
