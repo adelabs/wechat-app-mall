@@ -56,9 +56,9 @@ function wxpay(app, money, orderId, redirectUrl) {
           method:'POST',
           success: function(wx_pay) {
             if (wx_pay.statusCode == 200) { // got wx_pay
+              console.log(wx_pay.data.appId, '== wx26166601014e8414');
+              console.log(wx_pay.data.appId, '!= wxa276f5bc9699997a');
               const payRequest = {
-              //appId:     wx_pay.data.appId, // aka 'wxa276f5bc9699997a'
-                appId:     'wx26166601014e8414',
                 nonceStr:  wx_pay.data.nonceStr,
                 package:   wx_pay.data.package,
                 paySign:   wx_pay.data.paySign,
