@@ -95,10 +95,15 @@ Page({
     this.bindGuiGeTap();
   },
   tobuy: function () {
-    this.setData({
-      shopType: "tobuy"
-    });
-    this.bindGuiGeTap();
+    // Simulate `this.buyNow`
+    var buyNowInfo = this.buliduBuyNowInfo();
+    wx.setStorage({
+      key:"buyNowInfo",
+      data:buyNowInfo
+    })
+    wx.navigateTo({
+      url: "/pages/to-pay-order/index?orderType=buyNow"
+    })    
     /*    if (this.data.goodsDetail.properties && !this.data.canSubmit) {
           this.bindGuiGeTap();
           return;
@@ -359,7 +364,7 @@ Page({
     shopCarMap.price = this.data.selectSizePrice;
     shopCarMap.left = "";
     shopCarMap.active = true;
-    shopCarMap.number = this.data.buyNumber;
+    shopCarMap.number = 1;
     shopCarMap.logisticsType = this.data.goodsDetail.basicInfo.logisticsId;
     shopCarMap.logistics = this.data.goodsDetail.logistics;
     shopCarMap.weight = this.data.goodsDetail.basicInfo.weight;

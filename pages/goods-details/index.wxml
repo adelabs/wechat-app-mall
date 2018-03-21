@@ -75,7 +75,7 @@
         <!--
         <view class="join-shop-cart" bindtap="toAddShopCar">加入购物车</view>
         -->
-        <view class="now-buy" bindtap="tobuy">一键购买</view>
+        <view class="now-buy" bindtap="tobuy">一键下单</view>
    </view>
     <view class="show-popup" hidden="{{hideShopPopup}}" >
         <view class="popup-mask" bindtap="closePopupTap"></view>
