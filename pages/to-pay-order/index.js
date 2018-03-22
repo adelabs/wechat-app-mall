@@ -99,10 +99,42 @@ Page({
       postData.couponId = that.data.curCoupon.id;
     }
     if (!e) {
+      var allGoodsPrice = that.data.goodsList[0].price;
+      that.setData({
+        isNeedLogistics: 0,
+        allGoodsPrice: allGoodsPrice,
+        allGoodsAndYunPrice: allGoodsPrice,
+        yunPrice: 0
+      });
+      wx.hideLoading();
       postData.calculate = "true";
-    }
-
-
+    } else {
+    const prod_ids = [that.data.goodsList[0].goodsIndex];
+    wx.request({ // request wxinfo
+      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/user/wxinfo',
+      data: { token:app.globalData.token },
+      success: function(wxinfo) {
+        if (wxinfo.statusCode == 200) { // got wxinfo
+          const openid = wxinfo.data.data.openid;
+          wx.request({ // request wx_pay
+            url: 'https://mall.pipup.me/api/miniapp/wx_pay',
+            data: { openid: openid, prod_ids: prod_ids },
+            method:'POST',
+            success: function(wx_pay) {
+              if (wx_pay.statusCode == 200) { // got wx_pay
+                wx.requestPayment({
+                  nonceStr:  wx_pay.data.nonceStr,
+                  package:   wx_pay.data.package,
+                  paySign:   wx_pay.data.paySign,
+                  signType:  wx_pay.data.signType,
+                  timeStamp: wx_pay.data.timeStamp,
+                  fail:function (msg) {
+                    console.log(msg);
+                    wx.showToast({title: '支付失败:' + msg.errMsg});
+                    wx.navigateBack();
+                  },
+                  success:function() {
+                    wx.showToast({ title: '支付成功' });
     wx.request({
       url: 'https://api.it120.cc/'+ app.globalData.subDomain +'/order/create',
       method:'POST',
@@ -158,6 +190,21 @@ Page({
         });
       }
     })
+                  }
+                });
+              } else { // didn't get wx_pay
+                console.log(wx_pay);
+              }
+            },
+          }); // request wx_pay
+        } else { // didn't get wxinfo
+          console.log(wxinfo);
+        }
+      },
+    }); // request wxinfo
+    }
+
+
   },
   initShippingAddress: function () {
     var that = this;

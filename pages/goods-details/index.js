@@ -355,6 +355,7 @@ Page({
 	 */
   buliduBuyNowInfo: function () {
     var shopCarMap = {};
+    shopCarMap.goodsIndex = parseInt(this.data.goodsDetail.basicInfo.barCode);
     shopCarMap.goodsId = this.data.goodsDetail.basicInfo.id;
     shopCarMap.pic = this.data.goodsDetail.basicInfo.pic;
     shopCarMap.name = this.data.goodsDetail.basicInfo.name;
