@@ -1,0 +1,26 @@
+<view class="container">
+  <form bindsubmit="bindSubmit" report-submit="true">
+
+    <view>
+      <text>地址</text>
+    </view>
+    <view>
+      <input name="address" type="text" placeholder="省 市 街道" />
+    </view>
+
+    <view wx:for="{{questions}}" wx:for-index="qid" wx:key="{{index}}" class="entry">
+
+      <view class="question">
+        <text>{{item.question}}</text>
+      </view> <!-- .question -->
+      <radio-group class="radio-group" name="{{qid}}" bindchange="bindRadioChange">
+        <view class="radio" wx:for="{{item.choices}}" wx:key="{{item.sn}}">
+          <radio value="{{item.kind}}" checked="{{false}}"/>{{item.text}}
+        </view>
+      </radio-group>
+
+    </view> <!-- .entry -->
+
+    <button formType="submit">提交信息</button>
+  </form>
+</view>
