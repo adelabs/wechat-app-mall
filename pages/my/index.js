@@ -40,6 +40,9 @@ Page({
       showCancel:false
     })
   },
+  bindContact: function() {
+    console.log('bindContact');
+  },
   getPhoneNumber: function(e) {
     if (!e.detail.errMsg || e.detail.errMsg != "getPhoneNumber:ok") {
       wx.showModal({

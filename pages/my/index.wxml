@@ -39,6 +39,9 @@
   <view wx:if="{{userMobile}}" class="my-item" style="border:none;padding-right:150rpx;width:auto;">
     {{userMobile}}
   </view>
+  <view class="my-item" style="border:none;padding-right:150rpx;width:auto;">
+    <button open-type="contact" bindtap="bindContact">联系我们</button>
+  </view>
   <!--
   <view style="height:20rpx;background: #eee;width:100%;"></view>
   <view class="about" bindtap="aboutUs">
