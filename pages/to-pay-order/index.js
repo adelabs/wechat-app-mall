@@ -109,7 +109,7 @@ Page({
       wx.hideLoading();
       postData.calculate = "true";
     } else {
-    const prod_ids = [that.data.goodsList[0].goodsIndex];
+    const card_id = that.data.goodsList[0].goodsIndex;
     wx.request({ // request wxinfo
       url: 'https://api.it120.cc/' + app.globalData.subDomain + '/user/wxinfo',
       data: { token:app.globalData.token },
@@ -118,7 +118,7 @@ Page({
           const openid = wxinfo.data.data.openid;
           wx.request({ // request wx_pay
             url: 'https://mall.pipup.me/api/miniapp/wx_pay',
-            data: { openid: openid, prod_ids: prod_ids },
+            data: { openid: openid, card_id: card_id },
             method:'POST',
             success: function(wx_pay) {
               if (wx_pay.statusCode == 200) { // got wx_pay
