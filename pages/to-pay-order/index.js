@@ -2,6 +2,82 @@
 //获取应用实例
 var app = getApp()
 
+function addLocalUnpaidOrder(page, card_id, remark) {
+  var localUnpaidOrders = wx.getStorageSync('localUnpaidOrders');
+  if (!localUnpaidOrders) { localUnpaidOrders = []; }
+  const orderIndex = localUnpaidOrders.length;
+  localUnpaidOrders.push({
+    card_id: card_id,
+    remark: remark
+  });
+  wx.setStorage({ key:'localUnpaidOrders', data:localUnpaidOrders });
+
+  console.log(localUnpaidOrders);
+  payLocalUnpaidOrder(page, orderIndex);
+}
+
+function removeLocalUnpaidOrder(page, index) {
+  var localUnpaidOrders = wx.getStorageSync('localUnpaidOrders');
+  localUnpaidOrders.splice(index, 1);
+  wx.setStorage({ key:'localUnpaidOrders', data:localUnpaidOrders });
+
+  console.log(localUnpaidOrders);
+}
+
+function afterPaymentSuccess(page) {
+  // TODO: guide to register if not yet
+  wx.navigateTo({
+    url:"/pages/order-list/index"
+  });
+}
+
+function payLocalUnpaidOrder(page, index) {
+  const localUnpaidOrders = wx.getStorageSync('localUnpaidOrders');
+  const localUnpaidOrder = localUnpaidOrders[index];
+  const card_id = localUnpaidOrder.card_id;
+  console.log(localUnpaidOrder);
+  wx.request({ // request wxinfo
+    url: 'https://api.it120.cc/' + app.globalData.subDomain + '/user/wxinfo',
+    data: { token:app.globalData.token },
+    success: function(wxinfo) {
+      if (wxinfo.statusCode == 200) { // got wxinfo
+        const openid = wxinfo.data.data.openid;
+        wx.request({ // request wx_pay
+          url: 'https://mall.pipup.me/api/miniapp/wx_pay',
+          data: { openid: openid, card_id: card_id },
+          method:'POST',
+          success: function(wx_pay) {
+            if (wx_pay.statusCode == 200) { // got wx_pay
+              wx.requestPayment({
+                nonceStr:  wx_pay.data.nonceStr,
+                package:   wx_pay.data.package,
+                paySign:   wx_pay.data.paySign,
+                signType:  wx_pay.data.signType,
+                timeStamp: wx_pay.data.timeStamp,
+                fail:function (msg) {
+                  wx.showToast({title: '支付失败:' + msg.errMsg});
+                  wx.navigateTo({
+                    url:"/pages/order-list/index"
+                  });
+                }, // fail
+                success:function() {
+                  wx.showToast({ title: '支付成功' });
+                  removeLocalUnpaidOrder(page, index);
+                  afterPaymentSuccess(page);
+                } // success
+              }); // requestPayment
+            } else { // didn't get wx_pay
+              console.log(wx_pay);
+            }
+          },
+        }); // request wx_pay
+      } else { // didn't get wxinfo
+        console.log(wxinfo);
+      }
+    },
+  });
+}
+
 Page({
   data: {
     goodsList:[],
@@ -109,99 +185,8 @@ Page({
       wx.hideLoading();
       postData.calculate = "true";
     } else {
-    const card_id = that.data.goodsList[0].goodsIndex;
-    wx.request({ // request wxinfo
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/user/wxinfo',
-      data: { token:app.globalData.token },
-      success: function(wxinfo) {
-        if (wxinfo.statusCode == 200) { // got wxinfo
-          const openid = wxinfo.data.data.openid;
-          wx.request({ // request wx_pay
-            url: 'https://mall.pipup.me/api/miniapp/wx_pay',
-            data: { openid: openid, card_id: card_id },
-            method:'POST',
-            success: function(wx_pay) {
-              if (wx_pay.statusCode == 200) { // got wx_pay
-                wx.requestPayment({
-                  nonceStr:  wx_pay.data.nonceStr,
-                  package:   wx_pay.data.package,
-                  paySign:   wx_pay.data.paySign,
-                  signType:  wx_pay.data.signType,
-                  timeStamp: wx_pay.data.timeStamp,
-                  fail:function (msg) {
-                    console.log(msg);
-                    wx.showToast({title: '支付失败:' + msg.errMsg});
-                    wx.navigateBack();
-                  },
-                  success:function() {
-                    wx.showToast({ title: '支付成功' });
-    wx.request({
-      url: 'https://api.it120.cc/'+ app.globalData.subDomain +'/order/create',
-      method:'POST',
-      header: {
-        'content-type': 'application/x-www-form-urlencoded'
-      },
-      data: postData, // 设置请求的 参数
-      success: (res) =>{
-        wx.hideLoading();
-        if (res.data.code != 0) {
-          wx.showModal({
-            title: '错误',
-            content: res.data.msg,
-            showCancel: false
-          })
-          return;
-        }
-
-        if (e && "buyNow" != that.data.orderType) {
-          // 清空购物车数据
-          wx.removeStorageSync('shopCarInfo');
-        }
-        if (!e) {
-          that.setData({
-            isNeedLogistics: res.data.data.isNeedLogistics,
-            allGoodsPrice: res.data.data.amountTotle,
-            allGoodsAndYunPrice: res.data.data.amountLogistics + res.data.data.amountTotle,
-            yunPrice: res.data.data.amountLogistics
-          });
-          that.getMyCoupons();
-          return;
-        }
-        // 配置模板消息推送
-        var postJsonString = {};
-        postJsonString.keyword1 = { value: res.data.data.dateAdd, color: '#173177' }
-        postJsonString.keyword2 = { value: res.data.data.amountReal + '元', color: '#173177' }
-        postJsonString.keyword3 = { value: res.data.data.orderNumber, color: '#173177' }
-        postJsonString.keyword4 = { value: '订单已关闭', color: '#173177' }
-        postJsonString.keyword5 = { value: '您可以重新下单，请在30分钟内完成支付', color:'#173177'}
-        app.sendTempleMsg(res.data.data.id, -1,
-          'mGVFc31MYNMoR9Z-A9yeVVYLIVGphUVcK2-S2UdZHmg', e.detail.formId,
-          'pages/index/index', JSON.stringify(postJsonString));
-        postJsonString = {};
-        postJsonString.keyword1 = { value: '您的订单已发货，请注意查收', color: '#173177' }
-        postJsonString.keyword2 = { value: res.data.data.orderNumber, color: '#173177' }
-        postJsonString.keyword3 = { value: res.data.data.dateAdd, color: '#173177' }
-        app.sendTempleMsg(res.data.data.id, 2,
-          'Arm2aS1rsklRuJSrfz-QVoyUzLVmU2vEMn_HgMxuegw', e.detail.formId,
-          'pages/order-details/index?id=' + res.data.data.id, JSON.stringify(postJsonString));
-        // 下单成功，跳转到订单管理界面
-        wx.redirectTo({
-          url: "/pages/info/index"
-        });
-      }
-    })
-                  }
-                });
-              } else { // didn't get wx_pay
-                console.log(wx_pay);
-              }
-            },
-          }); // request wx_pay
-        } else { // didn't get wxinfo
-          console.log(wxinfo);
-        }
-      },
-    }); // request wxinfo
+      wx.hideLoading();
+      addLocalUnpaidOrder(this, that.data.goodsList[0].goodsIndex, e.detail.value.remark);
     }
 
 
