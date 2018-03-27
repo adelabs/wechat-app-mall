@@ -1,4 +1,5 @@
 var wxpay = require('../../utils/pay.js')
+var orders = require('../to-pay-order/index.js')
 var app = getApp()
 Page({
   data:{
@@ -28,28 +29,15 @@ Page({
       content: '',
       success: function(res) {
         if (res.confirm) {
-          wx.showLoading();
-          wx.request({
-            url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/close',
-            data: {
-              token: app.globalData.token,
-              orderId: orderId
-            },
-            success: (res) => {
-              wx.hideLoading();
-              if (res.data.code == 0) {
-                that.onShow();
-              }
-            }
-          })
+          orders.removeLocalUnpaidOrder(that, orderId);
+          that.onShow();
         }
       }
     })
   },
   toPayTap:function(e){
     var orderId = e.currentTarget.dataset.id;
-    var money = e.currentTarget.dataset.money;
-    wxpay.wxpay(app, money, orderId, "/pages/order-list/index");
+    orders.payLocalUnpaidOrder(this, orderId);
   },
   onLoad:function(options){
     // 生命周期函数--监听页面加载
@@ -130,7 +118,14 @@ Page({
         }
       }
     })
-    
+    const localUnpaidOrders = wx.getStorageSync('localUnpaidOrders');
+    const paidOrders = [];
+    console.log(localUnpaidOrders);
+    console.log(paidOrders);
+    this.setData({
+      paidOrders: paidOrders,
+      localUnpaidOrders: localUnpaidOrders,
+    });
   },
   onHide:function(){
     // 生命周期函数--监听页面隐藏

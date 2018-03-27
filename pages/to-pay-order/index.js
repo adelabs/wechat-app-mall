@@ -2,14 +2,11 @@
 //获取应用实例
 var app = getApp()
 
-function addLocalUnpaidOrder(page, card_id, remark) {
+function addLocalUnpaidOrder(page, order) {
   var localUnpaidOrders = wx.getStorageSync('localUnpaidOrders');
   if (!localUnpaidOrders) { localUnpaidOrders = []; }
   const orderIndex = localUnpaidOrders.length;
-  localUnpaidOrders.push({
-    card_id: card_id,
-    remark: remark
-  });
+  localUnpaidOrders.push(order);
   wx.setStorageSync('localUnpaidOrders', localUnpaidOrders);
 
   console.log(localUnpaidOrders);
@@ -186,7 +183,13 @@ Page({
       postData.calculate = "true";
     } else {
       wx.hideLoading();
-      addLocalUnpaidOrder(this, that.data.goodsList[0].goodsIndex, e.detail.value.remark);
+      addLocalUnpaidOrder(this, 
+          {
+              card_id: that.data.goodsList[0].goodsIndex,
+              remark: e.detail.value.remark,
+              amountReal: that.data.goodsList[0].price,
+          }
+      );
     }
 
 
@@ -301,3 +304,9 @@ Page({
     });
   }
 })
+module.exports = {
+  addLocalUnpaidOrder: addLocalUnpaidOrder,
+  removeLocalUnpaidOrder:removeLocalUnpaidOrder,
+  afterPaymentSuccess:afterPaymentSuccess,
+  payLocalUnpaidOrder:payLocalUnpaidOrder,
+}
