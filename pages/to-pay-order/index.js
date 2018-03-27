@@ -10,7 +10,7 @@ function addLocalUnpaidOrder(page, card_id, remark) {
     card_id: card_id,
     remark: remark
   });
-  wx.setStorageSync({ key:'localUnpaidOrders', data:localUnpaidOrders });
+  wx.setStorageSync('localUnpaidOrders', localUnpaidOrders);
 
   console.log(localUnpaidOrders);
   payLocalUnpaidOrder(page, orderIndex);
@@ -19,7 +19,7 @@ function addLocalUnpaidOrder(page, card_id, remark) {
 function removeLocalUnpaidOrder(page, index) {
   var localUnpaidOrders = wx.getStorageSync('localUnpaidOrders');
   localUnpaidOrders.splice(index, 1);
-  wx.setStorageSync({ key:'localUnpaidOrders', data:localUnpaidOrders });
+  wx.setStorageSync('localUnpaidOrders', localUnpaidOrders);
 
   console.log(localUnpaidOrders);
 }
