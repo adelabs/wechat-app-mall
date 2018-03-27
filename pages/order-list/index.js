@@ -3,9 +3,6 @@ var orders = require('../to-pay-order/index.js')
 var app = getApp()
 Page({
   data:{
-    statusType: ["待付款", "待发货", "待收货", "待评价", "已完成"],
-    currentType:0,
-    tabClass: ["", "", "", "", ""]
   },
   statusTap:function(e){
      var curType =  e.currentTarget.dataset.index;
@@ -46,48 +43,6 @@ Page({
   onReady:function(){
     // 生命周期函数--监听页面初次渲染完成
  
-  },
-  getOrderStatistics : function () {
-    var that = this;
-    wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/statistics',
-      data: { token: app.globalData.token },
-      success: (res) => {
-        wx.hideLoading();
-        if (res.data.code == 0) {
-          var tabClass = that.data.tabClass;
-          if (res.data.data.count_id_no_pay > 0) {
-            tabClass[0] = "red-dot"
-          } else {
-            tabClass[0] = ""
-          }
-          if (res.data.data.count_id_no_transfer > 0) {
-            tabClass[1] = "red-dot"
-          } else {
-            tabClass[1] = ""
-          }
-          if (res.data.data.count_id_no_confirm > 0) {
-            tabClass[2] = "red-dot"
-          } else {
-            tabClass[2] = ""
-          }
-          if (res.data.data.count_id_no_reputation > 0) {
-            tabClass[3] = "red-dot"
-          } else {
-            tabClass[3] = ""
-          }
-          if (res.data.data.count_id_success > 0) {
-            //tabClass[4] = "red-dot"
-          } else {
-            //tabClass[4] = ""
-          }
-
-          that.setData({
-            tabClass: tabClass,
-          });
-        }
-      }
-    })
   },
   onShow:function(){
     // 获取订单列表
