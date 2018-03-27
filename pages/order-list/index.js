@@ -3,6 +3,9 @@ var orders = require('../to-pay-order/index.js')
 var app = getApp()
 Page({
   data:{
+    localUnpaidOrders: [],
+    orphanOrders: [],
+    paidOrders: [],
   },
   orderDetail : function (e) {
     var orderId = e.currentTarget.dataset.id;
@@ -28,6 +31,35 @@ Page({
     var orderId = e.currentTarget.dataset.id;
     orders.payLocalUnpaidOrder(this, orderId);
   },
+  getOrphanOrdersAndHideLoading: function() {
+    var that = this;
+    wx.request({ // request wxinfo
+      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/user/wxinfo',
+      data: { token:app.globalData.token },
+      success: function(wxinfo) {
+        if (wxinfo.statusCode == 200) { // got wxinfo
+          const openid = wxinfo.data.data.openid;
+          wx.request({ // request orphan order
+            url: 'https://mall.pipup.me/api/miniapp/get_payment_by_openid/',
+            data: { openid: openid },
+            method:'GET',
+            success: function(payment) {
+              if (payment.data.data) {
+                console.log(payment.data.data);
+                that.setData({ orphanOrders: [payment.data.data] });
+              }
+            },
+          }); // request wsx_pay
+        } else { // didn't get wxinfo
+          console.log(wxinfo);
+        }
+      },
+      complete: function() {
+        wx.hideLoading();
+      }
+    });
+
+  },
   onLoad:function(options){
     // 生命周期函数--监听页面加载
    
@@ -44,14 +76,9 @@ Page({
       token: app.globalData.token
     };
     const localUnpaidOrders = wx.getStorageSync('localUnpaidOrders');
-    const paidOrders = [];
     console.log(localUnpaidOrders);
-    console.log(paidOrders);
-    this.setData({
-      paidOrders: paidOrders,
-      localUnpaidOrders: localUnpaidOrders,
-    });
-    wx.hideLoading();
+    this.setData({ localUnpaidOrders: localUnpaidOrders });
+    this.getOrphanOrdersAndHideLoading();
   },
   onHide:function(){
     // 生命周期函数--监听页面隐藏

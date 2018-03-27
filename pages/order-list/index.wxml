@@ -1,9 +1,9 @@
 <view class="container">
-    <view class="no-order" hidden="{{paidOrders.length + localUnpaidOrders.length > 0}}">
+    <view class="no-order" hidden="{{paidOrders.length + orphanOrders.length + localUnpaidOrders.length > 0}}">
         <image src="/images/no-order.png" class="no-order-img"></image>
         <view class="text">暂无订单</view>
     </view>
-    <view class="order-list" hidden="{{localUnpaidOrders ? false : true}}">
+    <view class="order-list" hidden="{{paidOrders.length + orphanOrders.length + localUnpaidOrders.length == 0}}">
         <view class="a-order" wx:for-items="{{localUnpaidOrders}}" wx:key="{{index}}">
             <view class="order-date">
                 <view class="date-box">card_id： {{item.card_id}}</view>
@@ -19,6 +19,21 @@
                 <view class="btn cancel-btn" bindtap="cancelOrderTap"  data-id="{{index}}">取消订单</view>
                 <view class="btn topay-btn"  bindtap="toPayTap"        data-id="{{index}}" data-money="{{item.amountReal}}">马上付款</view>        
             </view>  
-        </view>
-    </view> <!-- localUnpaidOrders -->
+        </view>  <!-- localUnpaidOrders -->
+        <view class="a-order" wx:for-items="{{orphanOrders}}" wx:key="{{index}}">
+            <view class="order-date">
+                <view class="date-box">订单号： {{item.order_no}}</view>
+                <view class="status}}">已支付</view>
+            </view>
+            <view class="goods-info" data-id="{{item.id}}">
+                <view class="goods-des">
+                   <view>商品名称： {{item.name}}</view>
+                </view>
+            </view>
+            <view class="price-box">
+                <view class="total-price">合计：¥ {{item.amount}}</view>
+                <view class="btn topay-btn"  bindtap="bindRegister" >完善信息</view>        
+            </view>  
+        </view>  <!-- localUnpaidOrders -->
+    </view>
 </view>
