@@ -4,14 +4,6 @@ var app = getApp()
 Page({
   data:{
   },
-  statusTap:function(e){
-     var curType =  e.currentTarget.dataset.index;
-     this.data.currentType = curType
-     this.setData({
-       currentType:curType
-     });
-     this.onShow();
-  },
   orderDetail : function (e) {
     var orderId = e.currentTarget.dataset.id;
     wx.navigateTo({
@@ -51,28 +43,6 @@ Page({
     var postData = {
       token: app.globalData.token
     };
-    postData.status = that.data.currentType;
-    this.getOrderStatistics();
-    wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/list',
-      data: postData,
-      success: (res) => {
-        wx.hideLoading();
-        if (res.data.code == 0) {
-          that.setData({
-            orderList: res.data.data.orderList,
-            logisticsMap : res.data.data.logisticsMap,
-            goodsMap : res.data.data.goodsMap
-          });
-        } else {
-          this.setData({
-            orderList: null,
-            logisticsMap: {},
-            goodsMap: {}
-          });
-        }
-      }
-    })
     const localUnpaidOrders = wx.getStorageSync('localUnpaidOrders');
     const paidOrders = [];
     console.log(localUnpaidOrders);
@@ -81,6 +51,7 @@ Page({
       paidOrders: paidOrders,
       localUnpaidOrders: localUnpaidOrders,
     });
+    wx.hideLoading();
   },
   onHide:function(){
     // 生命周期函数--监听页面隐藏
