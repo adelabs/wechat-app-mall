@@ -31,6 +31,9 @@ Page({
     var orderId = e.currentTarget.dataset.id;
     orders.payLocalUnpaidOrder(this, orderId);
   },
+  bindRegister:function() {
+    wx.navigateTo({ url: "/pages/register/index" });
+  },
   getOrphanOrdersAndHideLoading: function() {
     var that = this;
     wx.request({ // request wxinfo
