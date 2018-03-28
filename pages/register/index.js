@@ -3,7 +3,6 @@ var app = getApp()
 
 function finishRegisterAll() {
   wx.setStorageSync('registered', true);
-  console.log(app);
   const dest = 'pages/order-list/index';
   const pages = getCurrentPages();
   const currentUrl = pages[pages.length-1].route;
