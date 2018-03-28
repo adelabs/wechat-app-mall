@@ -64,6 +64,27 @@ Page({
     });
 
   },
+  getPaidOrders: function() {
+    var page = this;
+    const access_token = wx.getStorageSync('access_token');
+    if (!access_token) { return; }
+    const url = 'https://mall.pipup.me/api/v1/orders/my?at=123456789012345&access_token=' + access_token;
+    console.log(url);
+    wx.request({ // add baby
+      url: url,
+      data: {},
+      method:'GET',
+      success: function(res) {
+        if (res.statusCode == 200) {
+          const paidOrders = res.data.data.data;
+          console.log(paidOrders);
+          page.setData({paidOrders: paidOrders});
+        } else {
+          console.log(res);
+        }
+      },
+    }); // add baby
+  }, 
   onLoad:function(options){
     // 生命周期函数--监听页面加载
    
@@ -84,6 +105,7 @@ Page({
     this.setData({ localUnpaidOrders: localUnpaidOrders });
     this.getOrphanOrdersAndHideLoading();
     register.registerOrphanOrderIfThereIsAny(this);
+    this.getPaidOrders();
   },
   onHide:function(){
     // 生命周期函数--监听页面隐藏

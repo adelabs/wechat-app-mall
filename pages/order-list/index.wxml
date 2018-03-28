@@ -34,6 +34,21 @@
                 <view class="total-price">合计：¥ {{item.amount}}</view>
                 <view class="btn topay-btn"  bindtap="bindRegister" >完善信息</view>        
             </view>  
-        </view>  <!-- localUnpaidOrders -->
+        </view>  <!-- orphanOrders -->
+        <view class="a-order" wx:for-items="{{paidOrders}}" wx:key="{{index}}">
+            <view class="order-date">
+                <view class="date-box">订单号： {{item.sn}}</view>
+                <view class="status}}">已支付</view>
+            </view>
+            <view class="goods-info" data-id="{{item.id}}">
+                <view class="goods-des">
+                   <view>card_id： {{item.card_id}}</view>
+                   <view>订单状态： {{item.state}}</view>
+                </view>
+            </view>
+            <view class="price-box">
+                <view class="total-price">合计：¥ {{item.money}}</view>
+            </view>  
+        </view>  <!-- paidOrders -->
     </view>
 </view>
