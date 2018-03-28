@@ -42,6 +42,27 @@ Page({
   },
   bindContact: function() {
     console.log('bindContact');
+    wx.request({ // request wxinfo
+      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/user/wxinfo',
+      data: { token:app.globalData.token },
+      success: function(wxinfo) {
+        if (wxinfo.statusCode == 200) { // got wxinfo
+          const openid = wxinfo.data.data.openid;
+          setTimeout(function(){
+            wx.request({
+              method: "POST",
+              url: 'https://mall.pipup.me/api/miniapp/send_custom_message',
+              data: { openid: openid },
+              success: function (res) {
+                console.log(res)
+              }
+            });
+          }, 1000);
+        } else { // didn't get wxinfo
+          console.log(wxinfo);
+        }
+      },
+    });
   },
   getPhoneNumber: function(e) {
     if (!e.detail.errMsg || e.detail.errMsg != "getPhoneNumber:ok") {
