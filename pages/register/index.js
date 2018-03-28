@@ -171,6 +171,7 @@ Page({
           page.finishRegister(res);
         } else {
           console.log(res);
+          wx.showToast({title: '注册失败:' + res.data.message});
         }
       },
     }); // verifycode
