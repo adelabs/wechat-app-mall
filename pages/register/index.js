@@ -99,15 +99,6 @@ Page({
           {text: '可以说出自己的需求', kind: 7, sn: ''},
         ],
       }, {
-        question: '排行',
-        key: 'rank',
-        choices: [
-          {text: '大宝', kind: '大宝', sn: ''},
-          {text: '二宝', kind: '二宝', sn: ''},
-          {text: '三宝', kind: '三宝', sn: ''},
-          {text: '四宝', kind: '四宝', sn: ''},
-        ],
-      }, {
         question: '性别',
         key: 'gender',
         choices: [
