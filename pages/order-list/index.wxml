@@ -32,7 +32,7 @@
             </view>
             <view class="price-box">
                 <view class="total-price">合计：¥ {{item.amount}}</view>
-                <view class="btn topay-btn"  bindtap="bindRegister" >完善信息</view>        
+                <view class="btn topay-btn"  bindtap="bindRegister" hidden="{{registered}}">完善信息</view>        
             </view>  
         </view>  <!-- orphanOrders -->
         <view class="a-order" wx:for-items="{{paidOrders}}" wx:key="{{index}}">

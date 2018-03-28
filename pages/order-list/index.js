@@ -100,6 +100,7 @@ Page({
     var postData = {
       token: app.globalData.token
     };
+    this.setData({registered: wx.getStorageSync('registered')});
     const localUnpaidOrders = wx.getStorageSync('localUnpaidOrders');
     console.log(localUnpaidOrders);
     this.setData({ localUnpaidOrders: localUnpaidOrders });
