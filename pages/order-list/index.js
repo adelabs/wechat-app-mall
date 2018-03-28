@@ -1,5 +1,6 @@
 var wxpay = require('../../utils/pay.js')
 var orders = require('../to-pay-order/index.js')
+var register = require('../register/index.js')
 var app = getApp()
 Page({
   data:{
@@ -82,6 +83,7 @@ Page({
     console.log(localUnpaidOrders);
     this.setData({ localUnpaidOrders: localUnpaidOrders });
     this.getOrphanOrdersAndHideLoading();
+    register.registerOrphanOrderIfThereIsAny(this);
   },
   onHide:function(){
     // 生命周期函数--监听页面隐藏

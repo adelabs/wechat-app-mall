@@ -1,5 +1,76 @@
 var wxpay = require('../../utils/pay.js')
 var app = getApp()
+
+function finishRegisterAll() {
+  wx.setStorageSync('registered', true);
+  console.log(app);
+  const dest = 'pages/order-list/index';
+  const pages = getCurrentPages();
+  const currentUrl = pages[pages.length-1].route;
+  console.log(dest, currentUrl);
+  if (dest != currentUrl) {
+    wx.navigateTo({ url: dest });
+  }
+}
+
+function registerOrphanOrderIfThereIsAny(page) {
+  wx.request({ // request wxinfo
+    url: 'https://api.it120.cc/' + app.globalData.subDomain + '/user/wxinfo',
+    data: { token:app.globalData.token },
+    success: function(wxinfo) {
+      if (wxinfo.statusCode == 200) { // got wxinfo
+        const openid = wxinfo.data.data.openid;
+        wx.request({ // request orphan order
+          url: 'https://mall.pipup.me/api/miniapp/get_payment_by_openid/',
+          data: { openid: openid },
+          method:'GET',
+          success: function(res) {
+            console.log(res);
+            if (res.data.data) {
+              registerTheOrphanOrder(page, res.data.data);
+            }
+          },
+          fail:function (msg) {
+            console.log(msg);
+          }, // fail
+          complete: function(msg) {
+            console.log(msg);
+            finishRegisterAll();
+          }
+        }); // request orphan order
+      } else { // didn't get wxinfo
+        console.log(wxinfo);
+      }
+    },
+  });
+} // registerOrphanOrderIfThereIsAny
+
+function registerTheOrphanOrder(page, order) {
+  const url = 'https://mall.pipup.me/api/v1/orders/?at=123456789012345&access_token=' + wx.getStorageSync('access_token');
+  const requestData = {
+    channel: order.channel, // aka 'miniapp'
+    order_no: order.order_no,
+    card_id: order.card_id,
+    address_id: wx.getStorageSync('address_id'),
+    baby_id: wx.getStorageSync('baby_id'),
+    baby_stage: 1,
+    //next_time: '2018-3-25',
+    //user_remark: '',
+    //user_coupon_id: '1',
+  };
+  console.log(url, requestData);
+
+  wx.request({ // create order
+    url: url,
+    data: requestData,
+    method:'POST',
+    success: function(res) {
+      console.log(res);
+      finishRegisterAll();
+    },
+  }); // create order
+}
+
 Page({
 
   /**
@@ -7,7 +78,7 @@ Page({
    */
   data: {
     submit: false,
-    step: 'addr',
+    step: 'regi',
     questions: [
       {
         question: '宝宝阶段',
@@ -159,25 +230,26 @@ Page({
     }); // add address
   },
 
-  finishRegister(res) {
+  finishRegister: function(res) {
     console.log(res);
     var access_token = res.data.access_token;
     wx.setStorageSync('access_token', access_token);
     this.setData({step: 'baby'});
   },
-  finishBaby(res) {
+  finishBaby: function(res) {
     console.log(res);
     var baby_id = res.data.data.id;
     wx.setStorageSync('baby_id', baby_id);
     this.setData({step: 'address'});
   },
-  finishAddress(res) {
+  finishAddress: function(res) {
     console.log(res);
     var address_id = res.data.data.id;
     wx.setStorageSync('address_id', address_id);
     this.setData({step: 'regi'});
     // register some orphan orders.
   },
+
 
   /**
    * 生命周期函数--监听页面初次渲染完成
@@ -190,7 +262,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    if (!wx.getStorageSync('access_token')) { this.setData({step: 'regi'}); return; }
+    if (!wx.getStorageSync('baby_id'))      { this.setData({step: 'baby'}); return; }
+    if (!wx.getStorageSync('address_id'))   { this.setData({step: 'addr'}); return; }
+    registerOrphanOrderIfThereIsAny(page);
   },
 
   /**
@@ -228,3 +303,7 @@ Page({
   
   },
 })
+
+module.exports = {
+  registerOrphanOrderIfThereIsAny: registerOrphanOrderIfThereIsAny,
+}
