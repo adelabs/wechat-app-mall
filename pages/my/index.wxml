@@ -59,7 +59,38 @@
     <button type="warn" bindtap="relogin">重新登录</button>
   </view>
   -->
-  
+  <view>
+  <text>状态：{{ isLogin ? '已登录' : registered ? '登录过期' : '未登录' }}</text>
+  </view>
+
+  <view>
+    <view style="height:20rpx;background: #eee;width:100%;"></view>
+    <view class="my-item" style="border:none;padding:0rpx;margin:0rpx;background:none;border:none;height:auto;line-height:auto;">
+      <button type="warn" bindtap="bindRegister">注册新手机号</button>
+    </view>
+  </view>
+
+  <view hidden="{{isLogin}}">
+    <view style="height:20rpx;background: #eee;width:100%;"></view>
+    <view class="my-item" style="border:none;padding:0rpx;margin:0rpx;background:none;border:none;height:auto;line-height:auto;">
+      <button type="warn" bindtap="bindLogin">手机号登录</button>
+    </view>
+  </view>
+
+  <view hidden="{{!registered || !isLogin}}">
+    <view style="height:20rpx;background: #eee;width:100%;"></view>
+    <view class="my-item" style="border:none;padding:0rpx;margin:0rpx;background:none;border:none;height:auto;line-height:auto;">
+      <button type="warn" bindtap="bindLogin">换个手机号登录</button>
+    </view>
+  </view>
+
+  <view hidden="{{!isLogin}}">
+    <view style="height:20rpx;background: #eee;width:100%;"></view>
+    <view class="my-item" style="border:none;padding:0rpx;margin:0rpx;background:none;border:none;height:auto;line-height:auto;">
+      <button type="warn" bindtap="bindChangeInfo">修改资料</button>
+    </view>
+  </view>
+
   <!--
   <view style="height:20rpx;background: #eee;width:100%;"></view>
   <view class="version">{{version}}</view>

@@ -223,7 +223,7 @@ Page({
 
   finishRegister: function(res) {
     console.log(res);
-    var access_token = res.data.access_token;
+    var access_token = res.data.data.access_token;
     wx.setStorageSync('access_token', access_token);
     this.setData({step: 'baby'});
   },

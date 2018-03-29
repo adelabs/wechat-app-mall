@@ -68,10 +68,10 @@ Page({
         if (res.statusCode == 200 && res.data.error == 0) {
           console.log(res.data);
           wx.showToast({title: '登录成功'});
-          var access_token = res.data.access_token;
+          var access_token = res.data.data.access_token;
           wx.setStorageSync('access_token', access_token);
-          this.getBabyIfThereIsAny(access_token);
-          this.getAddressIfThereIsAny(access_token);
+          page.getBabyIfThereIsAny(access_token);
+          page.getAddressIfThereIsAny(access_token);
           wx.navigateBack({});
         } else {
           console.log(res);

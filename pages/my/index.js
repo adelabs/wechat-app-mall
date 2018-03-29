@@ -1,7 +1,10 @@
+var pipup = require('../../utils/pipup.js')
 const app = getApp()
 
 Page({
 	data: {
+    registered: false,
+    isLogin: false,
     balance:0,
     freeze:0,
     score:0,
@@ -18,6 +21,7 @@ Page({
     this.getUserApiInfo();
     this.getUserAmount();
     this.checkScoreSign();
+    pipup.checkLogin(this);
   },	
   getUserInfo: function (cb) {
       var that = this
@@ -63,6 +67,25 @@ Page({
         }
       },
     });
+  },
+  bindRegister: function() {
+    wx.removeStorageSync('isLogin');
+    wx.removeStorageSync('access_token');
+    wx.removeStorageSync('baby_id');
+    wx.removeStorageSync('address_id');
+    wx.navigateTo({url: '/pages/register/index'});
+  },
+  bindLogin: function() {
+    wx.removeStorageSync('isLogin');
+    wx.removeStorageSync('access_token');
+    wx.removeStorageSync('baby_id');
+    wx.removeStorageSync('address_id');
+    wx.navigateTo({url: '/pages/login/index'});
+  },
+  bindChangeInfo: function() {
+    wx.removeStorageSync('baby_id');
+    wx.removeStorageSync('address_id');
+    wx.navigateTo({url: '/pages/register/index'});
   },
   getPhoneNumber: function(e) {
     if (!e.detail.errMsg || e.detail.errMsg != "getPhoneNumber:ok") {
