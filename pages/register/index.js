@@ -231,14 +231,14 @@ Page({
     console.log(res);
     var baby_id = res.data.data.id;
     wx.setStorageSync('baby_id', baby_id);
-    this.setData({step: 'address'});
+    this.setData({step: 'addr'});
   },
   finishAddress: function(res) {
     console.log(res);
     var address_id = res.data.data.id;
     wx.setStorageSync('address_id', address_id);
     this.setData({step: 'regi'});
-    // register some orphan orders.
+    wx.navigateBack({});
   },
 
 
