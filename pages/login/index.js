@@ -130,8 +130,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.getBabyIfThereIsAny('dT2mx8tXrXcnD9D3jL5Y');
-    this.getAddressIfThereIsAny('dT2mx8tXrXcnD9D3jL5Y');
   },
 
   /**
