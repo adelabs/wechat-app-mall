@@ -72,25 +72,6 @@ Page({
       })
     })
     wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/banner/list',
-      data: {
-        key: 'mallName'
-      },
-      success: function(res) {
-        if (res.data.code == 404) {
-          wx.showModal({
-            title: '提示',
-            content: '请在后台添加 banner 轮播图片',
-            showCancel: false
-          })
-        } else {
-          that.setData({
-            banners: res.data.data
-          });
-        }
-      }
-    })
-    wx.request({
       url: 'https://api.it120.cc/'+ app.globalData.subDomain +'/shop/goods/category/all',
       success: function(res) {
         var categories = [{id:0, name:"全部"}];
@@ -143,6 +124,8 @@ Page({
     })
   },
   getCoupons: function () {
+    this.setData({hasNoCoupons: true});
+    return;
     var that = this;
     wx.request({
       url: 'https://api.it120.cc/' + app.globalData.subDomain + '/discounts/coupons',
@@ -229,6 +212,8 @@ Page({
     }
   },
   getNotice: function () {
+    this.setData({noticeList: []});
+    return;
     var that = this;
     wx.request({
       url: 'https://api.it120.cc/' + app.globalData.subDomain + '/notice/list',
