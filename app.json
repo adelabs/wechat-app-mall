@@ -1,6 +1,8 @@
 {
   "pages":[
     "pages/index/index",
+    "pages/create-pipup-order/index",
+    "pages/verify-phone-number/index",
     "pages/goods-details/index",
     "pages/shop-cart/index",
     "pages/to-pay-order/index",

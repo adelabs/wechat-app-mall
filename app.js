@@ -92,6 +92,18 @@ App({
             //console.log(res.data.data)
             that.globalData.token = res.data.data.token;
             that.globalData.uid = res.data.data.uid;
+            // set openid
+            wx.request({ // request wxinfo
+              url: 'https://api.it120.cc/' + that.globalData.subDomain + '/user/wxinfo',
+              data: { token:res.data.data.token },
+              success: function(wxinfo) {
+                if (wxinfo.statusCode == 200) { // got wxinfo
+                  that.globalData.openid = wxinfo.data.data.openid;
+                } else { // didn't get wxinfo
+                  console.log(wxinfo);
+                }
+              },
+            }); // request wxinfo
           }
         })
       }

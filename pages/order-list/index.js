@@ -2,6 +2,7 @@ var wxpay = require('../../utils/pay.js')
 var app = getApp()
 Page({
   data:{
+    verifiedPhoneNumber: null,
     statusType: ["待付款", "待发货", "待收货", "待评价", "已完成"],
     currentType:0,
     tabClass: ["", "", "", "", ""]
@@ -19,6 +20,14 @@ Page({
     wx.navigateTo({
       url: "/pages/order-details/index?id=" + orderId
     })
+  },
+  bindCompleteInfo: function(e) {
+    var orderId = e.currentTarget.dataset.id;
+    if (this.data.verifiedPhoneNumber) {
+      wx.navigateTo({ url: "/pages/create-pipup-order/index?id=" + orderId })
+    } else {
+      wx.navigateTo({ url: "/pages/verify-phone-number/index?id=" + orderId })
+    }
   },
   cancelOrderTap:function(e){
     var that = this;
@@ -101,6 +110,35 @@ Page({
       }
     })
   },
+  checkPipupOrderCreated: function(orderList) {
+    var that = this;
+    for(var i = 0 ; i < orderList.length ; i++) {
+      var order = orderList[i];
+      var url = 'https://mall.pipup.me/api/miniapp/check_order_no';
+      var postData = {order_no: order.payNumber};
+      console.log(url, postData);
+      wx.request({
+        url: url,
+        method:'POST',
+        data: postData,
+        success: (res) => {
+          console.log(res.data);
+          order.pipupOrderCreated = (res.data.error != 0);
+          console.log(orderList);
+          that.setData({orderList: orderList});
+        }
+      });
+    }
+  },
+  checkPhoneNumberVerified: function() {
+    var that = this;
+    wx.getStorage({
+      key: 'verifiedPhoneNumber',
+      success: function(res) {
+        that.setData({verifiedPhoneNumber: res.data});
+      }
+    });
+  },
   onShow:function(){
     // 获取订单列表
     wx.showLoading();
@@ -110,6 +148,7 @@ Page({
     };
     postData.status = that.data.currentType;
     this.getOrderStatistics();
+    this.checkPhoneNumberVerified();
     wx.request({
       url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/list',
       data: postData,
@@ -121,6 +160,9 @@ Page({
             logisticsMap : res.data.data.logisticsMap,
             goodsMap : res.data.data.goodsMap
           });
+          if (postData.status == 1) {
+            that.checkPipupOrderCreated(res.data.data.orderList);
+          }
         } else {
           this.setData({
             orderList: null,
