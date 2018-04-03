@@ -25,9 +25,15 @@ function wxpay(app, money, orderId, redirectUrl) {
           signType:'MD5',
           paySign:res.data.data.sign,
           fail:function (aaa) {
-            wx.showToast({title: '支付失败:' + aaa})
+            console.log(aaa);
+            var title = '支付失败';
+            if (aaa.errMsg == 'requestPayment:fail cancel') {
+              title = '支付取消';
+            }
+            wx.showToast({title: title})
           },
-          success:function () {
+          success:function (aaa) {
+            console.log(aaa);
             wx.showToast({title: '支付成功'})
             wx.redirectTo({
               url: redirectUrl
@@ -35,6 +41,7 @@ function wxpay(app, money, orderId, redirectUrl) {
           }
         })
       } else {
+        console.log(res.data);
         wx.showToast({ title: '服务器忙' + res.data.code + res.data.msg})
       }
     }
