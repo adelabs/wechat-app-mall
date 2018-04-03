@@ -49,19 +49,3 @@
     <button formType="submit">提交信息</button>
   </form>
 </view>
-
-<!--
-<view class="container" hidden="{{stage != 'addr'}}">
-  <form bindsubmit="bindSubmitAddress" report-submit="true">
-
-    <view class="field"> <label>省  </label> <input name="province"     class="input" type="text" placeholder="省级行政单位"/> </view>
-    <view class="field"> <label>市  </label> <input name="city"         class="input" type="text" placeholder="地级市"/> </view>
-    <view class="field"> <label>区  </label> <input name="district"     class="input" type="text" placeholder="区/县"/> </view>
-    <view class="field"> <label>地址</label> <input name="address"      class="input" type="text" placeholder="具体门牌号"/> </view>
-    <view class="field"> <label>邮编</label> <input name="zip"          class="input" type="text" placeholder="6位数字"/> </view>
-    <view class="field"> <label>姓名</label> <input name="birthday"     class="input" type="text" placeholder="收件人姓名"/> </view>
-
-    <button formType="submit">提交信息</button>
-  </form>
-</view>
--->
