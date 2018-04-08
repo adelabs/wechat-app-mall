@@ -64,7 +64,7 @@ Page({
       data: phoneNumber
     });
     if (this.data.orderId) {
-      wx.navigateTo({ url: "/pages/create-pipup-order/index?id=" + this.data.orderId })
+      wx.redirectTo({ url: "/pages/create-pipup-order/index?id=" + this.data.orderId })
     } else {
       wx.navigateBack();
     }

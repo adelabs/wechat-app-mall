@@ -16,6 +16,8 @@ function wxpay(app, money, orderId, redirectUrl) {
     },
     //method:'POST',
     success: function(res){
+      console.log("支付参数")
+      console.log(res)
       if(res.data.code == 0){
         // 发起支付
         wx.requestPayment({
@@ -33,6 +35,7 @@ function wxpay(app, money, orderId, redirectUrl) {
             wx.showToast({title: title})
           },
           success:function (aaa) {
+            console.log("支付成功")
             console.log(aaa);
             wx.showToast({title: '支付成功'})
             wx.redirectTo({

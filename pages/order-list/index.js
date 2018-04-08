@@ -122,12 +122,29 @@ Page({
         method:'POST',
         data: postData,
         success: (res) => {
+          console.log("pipupOrderCreated")
           console.log(res.data);
-          order.pipupOrderCreated = (res.data.error != 0);
+          that.setOrder(res);
           console.log(orderList);
-          that.setData({orderList: orderList});
-        }
+          // that.setData({orderList: orderList});
+          that.data.orderList.forEach(function(or){
+          })
+        },
+
       });
+    }
+  },
+  setOrder: function(res){
+    let that = this;
+    let orderList = that.data.orderList;
+    console.log(res);
+    for (var i = 0; i < orderList.length; i++) {
+      if (orderList[i].payNumber == res.data.data)
+      {
+        console.log(orderList[i]);
+        orderList[i].pipupOrderCreated = (res.data.error != 0);
+        that.setData({ orderList: orderList });
+      }
     }
   },
   checkPhoneNumberVerified: function() {

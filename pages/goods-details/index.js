@@ -95,26 +95,26 @@ Page({
     })
     this.bindGuiGeTap();
   },
-  tobuy: function () {
-    this.setData({
-      shopType: "tobuy"
-    });
-    this.bindGuiGeTap();
-    /*    if (this.data.goodsDetail.properties && !this.data.canSubmit) {
-          this.bindGuiGeTap();
-          return;
-        }
-        if(this.data.buyNumber < 1){
-          wx.showModal({
-            title: '提示',
-            content: '暂时缺货哦~',
-            showCancel:false
-          })
-          return;
-        }
-        this.addShopCar();
-        this.goShopCar();*/
-  },  
+  // tobuy: function () {
+  //   this.setData({
+  //     shopType: "tobuy"
+  //   });
+  //   this.bindGuiGeTap();
+  //   /*    if (this.data.goodsDetail.properties && !this.data.canSubmit) {
+  //         this.bindGuiGeTap();
+  //         return;
+  //       }
+  //       if(this.data.buyNumber < 1){
+  //         wx.showModal({
+  //           title: '提示',
+  //           content: '暂时缺货哦~',
+  //           showCancel:false
+  //         })
+  //         return;
+  //       }
+  //       this.addShopCar();
+  //       this.goShopCar();*/
+  // },  
   /**
    * 规格选择弹出框
    */
@@ -264,30 +264,32 @@ Page({
 	  * 立即购买
 	  */
   buyNow:function(){
-    if (this.data.goodsDetail.properties && !this.data.canSubmit) {
-      if (!this.data.canSubmit) {
-        wx.showModal({
-          title: '提示',
-          content: '请选择商品规格！',
-          showCancel: false
-        })
-      }
-      this.bindGuiGeTap();
-      wx.showModal({
-        title: '提示',
-        content: '请先选择规格尺寸哦~',
-        showCancel:false
-      })
-      return;
-    }    
-    if(this.data.buyNumber < 1){
-      wx.showModal({
-        title: '提示',
-        content: '购买数量不能为0！',
-        showCancel:false
-      })
-      return;
-    }
+    console.log('buynow')
+    // if (this.data.goodsDetail.properties && !this.data.canSubmit) {
+    //   if (!this.data.canSubmit) {
+    //     wx.showModal({
+    //       title: '提示',
+    //       content: '请选择商品规格！',
+    //       showCancel: false
+    //     })
+    //   }
+    //   this.bindGuiGeTap();
+    //   wx.showModal({
+    //     title: '提示',
+    //     content: '请先选择规格尺寸哦~',
+    //     showCancel:false
+    //   })
+    //   return;
+    // }    
+    // if(this.data.buyNumber < 1){
+    //   wx.showModal({
+    //     title: '提示',
+    //     content: '购买数量不能为0！',
+    //     showCancel:false
+    //   })
+    //   return;
+    // }
+    this.data.buyNumber = 1
     //组建立即购买信息
     var buyNowInfo = this.buliduBuyNowInfo();
     // 写入本地存储
@@ -296,7 +298,7 @@ Page({
       data:buyNowInfo
     })
     this.closePopupTap();
-
+    console.log('buynow')
     wx.navigateTo({
       url: "/pages/to-pay-order/index?orderType=buyNow"
     })    

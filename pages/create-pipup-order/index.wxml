@@ -48,4 +48,7 @@
 
     <button formType="submit">提交信息</button>
   </form>
+  <view wx:if="{{showCustomerService}}" class="cover-layer">
+    <button open-type="contact" bindtap='custom_service'   class="customer-service" >关注我们</button>
+  </view>
 </view>

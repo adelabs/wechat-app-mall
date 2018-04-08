@@ -7,7 +7,7 @@ Page({
     hideStage: false,
     stage: 1,
     addressText: '',
-
+    // showCustomerService: true,
     stepOptions: [
     //{text: '还在肚子里，提前囤',  kind: 9},
       {text: '还不会坐，我要预定',  kind: 8},
@@ -20,6 +20,8 @@ Page({
   },
 
   onLoad: function (options) {
+    console.log("showCustomerService")
+    console.log(this.data.showCustomerService)
     var orderId = options.id;
     this.data.orderId = orderId;
     this.setData({
@@ -124,6 +126,7 @@ Page({
       long_remark : '',
     };
     console.log(url, postData);
+    let that = this;
     wx.request({ // create order
       url: url,
       data: postData,
@@ -131,7 +134,10 @@ Page({
       success: function(res) {
         if (res.statusCode == 200) {
           console.log(res);
-          navigateBack({});
+          that.setData({showCustomerService:true})
+          // wx.navigateBack({
+          //   delta: 1
+          // })
         } else {
           console.log(res);
           wx.showModal({
@@ -148,5 +154,21 @@ Page({
    */
   onShow: function () {
   },
-
+  custom_service: function () {
+    console.log('send_qcode')
+    let that = this;
+    setTimeout(function () {
+      wx.request({
+        method: "POST",
+        url: 'https://mall.pipup.me/api/miniapp/send_custom_message',
+        //url: 'http://localhost:3000/api/miniapp/dadytest/send_qcode',
+        data: {
+          openid: app.globalData.openid
+        },
+        success: function (resObj) {
+          console.log(resObj)
+        }
+      })
+    }, 1000)
+  },
 });
