@@ -39,7 +39,7 @@ function wxpay(app, money, orderId, redirectUrl) {
             console.log(aaa);
             wx.showToast({title: '支付成功'})
             wx.redirectTo({
-              url: redirectUrl
+              url: redirectUrl + '?from=pay'
             });
           }
         })

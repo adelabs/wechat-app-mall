@@ -62,7 +62,12 @@ Page({
   },
   onLoad:function(options){
     // 生命周期函数--监听页面加载
-   
+    const from = options.from;
+    this.data.from = from;
+    console.log('from ' , from);
+    if (from == 'pay') {
+      this.setData({currentType: 1});
+    }
   },
   onReady:function(){
     // 生命周期函数--监听页面初次渲染完成
@@ -142,8 +147,20 @@ Page({
       if (orderList[i].payNumber == res.data.data)
       {
         console.log(orderList[i]);
-        orderList[i].pipupOrderCreated = (res.data.error != 0);
+        const created = (res.data.error != 0);
+        orderList[i].pipupOrderCreated = created;
         that.setData({ orderList: orderList });
+        if (that.data.from == 'pay') {
+          that.data.from = '';
+          // simulate the behavior of pressing bindCompleteInfo
+          const orderId = orderList[i].payNumber;
+          console.log('from pay to bindCompleteInfo, with id=', orderId);
+          if (that.data.verifiedPhoneNumber) {
+            wx.navigateTo({ url: "/pages/create-pipup-order/index?id=" + orderId })
+          } else {
+            wx.navigateTo({ url: "/pages/verify-phone-number/index?id=" + orderId })
+          }
+        }
       }
     }
   },
