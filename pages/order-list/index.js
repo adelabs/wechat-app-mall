@@ -155,11 +155,7 @@ Page({
           // simulate the behavior of pressing bindCompleteInfo
           const orderId = orderList[i].payNumber;
           console.log('from pay to bindCompleteInfo, with id=', orderId);
-          if (that.data.verifiedPhoneNumber) {
-            wx.navigateTo({ url: "/pages/create-pipup-order/index?id=" + orderId })
-          } else {
-            wx.navigateTo({ url: "/pages/verify-phone-number/index?id=" + orderId })
-          }
+          that.bindCompleteInfo({currentTarget:{dataset:{id: orderId}}});
         }
       }
     }
