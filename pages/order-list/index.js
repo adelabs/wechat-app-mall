@@ -194,6 +194,13 @@ Page({
             logisticsMap : res.data.data.logisticsMap,
             goodsMap : res.data.data.goodsMap
           });
+          if (postData.status == 0 && that.data.from == 'order') {
+            that.data.from = '';
+            that.toPayTap({currentTarget:{dataset:{
+              id: res.data.data.orderList[0].id,
+              money: res.data.data.orderList[0].amountReal,
+            }}});
+          }
           if (postData.status == 1) {
             that.checkPipupOrderCreated(res.data.data.orderList);
           }

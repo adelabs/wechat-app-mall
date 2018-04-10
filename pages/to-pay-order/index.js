@@ -154,7 +154,7 @@ Page({
           'pages/order-details/index?id=' + res.data.data.id, JSON.stringify(postJsonString));
         // 下单成功，跳转到订单管理界面
         wx.redirectTo({
-          url: "/pages/order-list/index"
+          url: "/pages/order-list/index?from=order"
         });
       }
     })
